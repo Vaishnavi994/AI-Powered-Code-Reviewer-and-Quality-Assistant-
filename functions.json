@@ -1,0 +1,90 @@
+[
+    {
+        "file_name": "temp_samplec.py",
+        "function_name": "constant_time",
+        "start_line": 1,
+        "end_line": 5,
+        "cyclomatic_complexity": 1,
+        "has_docstring": true
+    },
+    {
+        "file_name": "temp_samplec.py",
+        "function_name": "linear_time",
+        "start_line": 7,
+        "end_line": 10,
+        "cyclomatic_complexity": 2,
+        "has_docstring": true
+    },
+    {
+        "file_name": "temp_samplec.py",
+        "function_name": "quadratic_time",
+        "start_line": 12,
+        "end_line": 16,
+        "cyclomatic_complexity": 3,
+        "has_docstring": true
+    },
+    {
+        "file_name": "temp_samplec.py",
+        "function_name": "cubic_time",
+        "start_line": 18,
+        "end_line": 23,
+        "cyclomatic_complexity": 4,
+        "has_docstring": true
+    },
+    {
+        "file_name": "temp_samplec.py",
+        "function_name": "log_time",
+        "start_line": 25,
+        "end_line": 28,
+        "cyclomatic_complexity": 2,
+        "has_docstring": true
+    },
+    {
+        "file_name": "temp_samplec.py",
+        "function_name": "n_log_n_time",
+        "start_line": 30,
+        "end_line": 35,
+        "cyclomatic_complexity": 3,
+        "has_docstring": true
+    },
+    {
+        "file_name": "temp_samplec.py",
+        "function_name": "n2_log_n_time",
+        "start_line": 37,
+        "end_line": 43,
+        "cyclomatic_complexity": 4,
+        "has_docstring": true
+    },
+    {
+        "file_name": "temp_samplec.py",
+        "function_name": "early_break",
+        "start_line": 45,
+        "end_line": 49,
+        "cyclomatic_complexity": 3,
+        "has_docstring": true
+    },
+    {
+        "file_name": "temp_samplec.py",
+        "function_name": "conditional_loop",
+        "start_line": 51,
+        "end_line": 56,
+        "cyclomatic_complexity": 4,
+        "has_docstring": true
+    },
+    {
+        "file_name": "temp_samplec.py",
+        "function_name": "recursive_linear",
+        "start_line": 58,
+        "end_line": 62,
+        "cyclomatic_complexity": 2,
+        "has_docstring": true
+    },
+    {
+        "file_name": "temp_samplec.py",
+        "function_name": "recursive_log",
+        "start_line": 64,
+        "end_line": 68,
+        "cyclomatic_complexity": 2,
+        "has_docstring": true
+    }
+]
