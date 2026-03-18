@@ -434,6 +434,8 @@ def run_full_analysis():
             master_data.append({
                 "File": r["file_name"],
                 "Function": r["function_name"],
+                "Start Line": r.get("start_line"),
+                "End Line": r.get("end_line"),
                 "Complexity": r["cyclomatic_complexity"],
                 "Violations": len(r["errors"]),
                 "Docstring": "✅ Present" if r["has_docstring"] else "❌ Missing"
@@ -441,8 +443,10 @@ def run_full_analysis():
 
         if errs:
             project_errors.extend([(os.path.basename(f), e) for e in errs])
+       
 
     st.session_state.master_data = master_data
+    
     st.session_state.project_errors = project_errors
     st.session_state.file_contents = file_contents
     st.session_state.analysis_done = True
