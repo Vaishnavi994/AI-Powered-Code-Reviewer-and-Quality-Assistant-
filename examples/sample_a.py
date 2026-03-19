@@ -1,12 +1,5 @@
 def calculate_average(numbers):
-    """
-    Calculate the average of a list of numbers.
 
-    :param numbers: A list of numbers.
-    :type numbers: list
-    :return: The average of the numbers.
-    :rtype: float
-    """
     total = 0
     for n in numbers:
         total += n
@@ -18,12 +11,17 @@ def add(a: int, b: int) -> int:
     """
     This function adds two integers.
 
-    :param a: The first integer to add.
-    :type a: int
-    :param b: The second integer to add.
-    :type b: int
-    :return: The sum of a and b.
-    :rtype: int
+    Parameters
+    ----------
+    a : int
+    The first integer to add.
+    b : int
+    The second integer to add.
+
+    Returns
+    -------
+    int
+    The sum of a and b.
     """
     return a + b
 
@@ -31,12 +29,17 @@ class Processor:
 
     def process(self, data):
         """
-        Process the given data.
+        Process the given data by printing each non-None item.
 
-        :param data: The data to be processed
-        :type data: iterable
-        :return: None
-        :rtype: None
+        Parameters
+        ----------
+        data : iterable
+        The input data to be processed.
+
+        Returns
+        ----------
+        None
+        This function does not return any value.
         """
         for item in data:
             if item is None:

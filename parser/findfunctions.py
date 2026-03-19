@@ -80,6 +80,37 @@ def extract_functions(file_path, original_name=None):
 
             # Missing Docstring
             docstring = ast.get_docstring(node)
+            # --- Docstring Period Check (NEW) ---
+            docstring_period_error = False
+
+            if docstring:
+                lines_doc = docstring.strip().split("\n")
+
+                for line in lines_doc:
+                    stripped = line.strip()
+
+                    if not stripped:
+                        continue
+
+                    # Ignore section headers (NumPy style)
+                    if stripped in ["Parameters", "Returns", "Raises", "Examples"]:
+                        continue
+
+                    # Ignore separator lines like ----------
+                    if set(stripped) == {"-"}:
+                        continue
+
+                    # Allow lines ending with '.' or ':'
+                    if ":" in stripped:
+                        continue
+                    if stripped.endswith(".") or stripped.endswith(":"):
+                        continue
+
+                    # Mark error
+                    docstring_period_error = True
+                    break
+
+           
             has_docstring = docstring is not None
             missing_docstring = not has_docstring
 
@@ -102,6 +133,8 @@ def extract_functions(file_path, original_name=None):
 
             # Collect Errors
             errors = []
+            if docstring and docstring_period_error:
+                errors.append("Docstring should end with a period")
 
             if missing_docstring:
                 errors.append("Missing Docstring")

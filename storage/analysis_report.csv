@@ -1,4 +1,4 @@
-File,Function,Complexity,Violations,Docstring
-sample_a.py,calculate_average,3,0,✅ Present
-sample_a.py,add,1,0,✅ Present
-sample_a.py,process,3,0,✅ Present
+File,Function,Start Line,End Line,Complexity,Violations,Docstring
+sample_a.py,calculate_average,1,8,3,1,❌ Missing
+sample_a.py,add,10,26,1,1,✅ Present
+sample_a.py,process,30,47,3,1,✅ Present

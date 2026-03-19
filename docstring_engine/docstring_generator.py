@@ -387,6 +387,7 @@ STRICTLY use Google docstring format.
 Rules:
 - Use 'Args:' and 'Returns:'
 - Do NOT use :param or Parameters
+end every line with a period.
 """
 
     elif style == "numpy":
@@ -397,6 +398,7 @@ Rules:
 - Use 'Parameters' and 'Returns'
 - Use dashed lines (----------)
 - Do NOT use Args or :param
+end every line with a period.
 """
 
     elif style == "rest":
@@ -409,6 +411,7 @@ Rules:
 - Use :return:
 - Use :rtype:
 - DO NOT use Args or Parameters
+end every line with a period.
 """
 
     # ✅ IMPORTANT: KEEP THIS INSIDE FUNCTION

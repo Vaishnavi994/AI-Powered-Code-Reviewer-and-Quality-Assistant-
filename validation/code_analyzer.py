@@ -440,3 +440,37 @@ def fix_source_code(source: str, file_name: str):
 
     errors = transformer.errors + detect_consecutive_blank_lines(source, file_name)
     return errors, updated_code
+
+
+
+
+def fix_docstrings(source_code):
+    tree = ast.parse(source_code)
+
+    class Fixer(ast.NodeTransformer):
+        def visit_FunctionDef(self, node):
+            self.generic_visit(node)
+
+            docstring = ast.get_docstring(node)
+
+            # ✅ Add missing docstring
+            if not docstring:
+                node.body.insert(0, ast.Expr(value=ast.Constant(value="Function description.")))
+
+            # ✅ Fix existing docstring
+            else:
+                lines = docstring.strip().split("\n")
+                fixed_lines = []
+
+                for line in lines:
+                    if line.strip() and not line.strip().endswith("."):
+                        fixed_lines.append(line.strip() + ".")
+                    else:
+                        fixed_lines.append(line)
+
+                node.body[0].value = ast.Constant(value="\n".join(fixed_lines))
+
+            return node
+
+    tree = Fixer().visit(tree)
+    return ast.unparse(tree)

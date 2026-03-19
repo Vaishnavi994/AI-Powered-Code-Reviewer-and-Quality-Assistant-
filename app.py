@@ -12,7 +12,7 @@ import subprocess
 import json
 
 from parser.findfunctions import extract_functions
-from validation.code_analyzer import fix_source_code
+from validation.code_analyzer import fix_source_code, fix_docstrings
 from parser.file_parser import get_function_node
 from docstring_engine.docstring_generator import (
     remove_existing_docstring,
@@ -47,152 +47,8 @@ def get_path_safely(mode="file"):
     p.join()
     return path
 
+st.set_page_config(layout="wide")
 
-# ----------------------------
-# Streamlit Config
-# ----------------------------
-st.set_page_config(page_title="AI Python Studio", page_icon="💎", layout="wide")
-
-
-# ----------------------------
-# Ultra Modern Dashboard Styling
-# ----------------------------
-# st.markdown("""
-# <style>
-
-# /* App Background */
-# .stApp{
-# background:linear-gradient(135deg,#f8fafc,#eef2ff,#f0f9ff);
-# font-family: 'Inter', sans-serif;
-# }
-
-# /* Title */
-# h1{
-# font-weight:800;
-# letter-spacing:-0.5px;
-# color:#1e293b;
-# }
-
-# /* Section titles */
-# h2,h3{
-# color:#1e3a8a;
-# font-weight:700;
-# }
-
-# /* Metric cards */
-# div[data-testid="metric-container"]{
-# background:linear-gradient(145deg,#ffffff,#f8fafc);
-# border:1px solid #e5e7eb;
-# padding:22px;
-# border-radius:18px;
-# box-shadow:0 10px 25px rgba(0,0,0,0.05);
-# transition:all .25s ease;
-# }
-
-# div[data-testid="metric-container"]:hover{
-# transform:translateY(-6px);
-# box-shadow:0 14px 35px rgba(0,0,0,0.08);
-# }
-
-# [data-testid="stMetricValue"]{
-# color:#2563eb;
-# font-weight:800;
-# }
-
-# /* Buttons */
-# div.stButton > button{
-# background:linear-gradient(135deg,#3b82f6,#6366f1);
-# color:white;
-# border-radius:14px;
-# border:none;
-# height:3.3em;
-# font-weight:600;
-# font-size:15px;
-# transition:all .25s ease;
-# box-shadow:0 6px 18px rgba(0,0,0,0.1);
-# }
-
-# div.stButton > button:hover{
-# transform:translateY(-3px);
-# box-shadow:0 10px 25px rgba(0,0,0,0.15);
-# }
-
-# /* Dropdown */
-# div[data-baseweb="select"]{
-# border-radius:10px;
-# }
-
-# /* Tabs */
-# button[data-baseweb="tab"]{
-# font-weight:600;
-# font-size:15px;
-# }
-
-# /* Docstring comparison cards */
-
-# .doc-card{
-# border-radius:14px;
-# padding:18px;
-# height:420px;
-# overflow-y:auto;
-# font-family:Courier New;
-# font-size:14px;
-# white-space:pre-wrap;
-# box-shadow:0 6px 18px rgba(0,0,0,0.05);
-# transition:all .2s ease;
-# }
-
-# .doc-card:hover{
-# transform:scale(1.01);
-# }
-
-# /* BEFORE */
-# .before-box{
-# background:#ffffff;
-# border:1px solid #e5e7eb;
-# color:#1e293b;
-# }
-
-# /* AFTER */
-# .after-box{
-# background:#eff6ff;
-# border:1px solid #93c5fd;
-# color:#1d4ed8;
-# }
-
-# /* Issue cards */
-# .issue-card{
-# background:#fff1f2;
-# border-left:5px solid #f43f5e;
-# padding:15px;
-# border-radius:10px;
-# margin-bottom:10px;
-# color:#9f1239;
-# font-size:14px;
-# }
-
-# /* File panel */
-# .file-panel{
-# background:white;
-# border-radius:12px;
-# padding:12px;
-# border:1px solid #e5e7eb;
-# box-shadow:0 3px 12px rgba(0,0,0,0.05);
-# }
-
-# /* Smooth animation */
-# @keyframes fadeIn{
-# from{opacity:0;transform:translateY(10px);}
-# to{opacity:1;transform:translateY(0);}
-# }
-
-# .block-container{
-# animation:fadeIn .4s ease;
-# }
-            
-
-# </style>
-# """, unsafe_allow_html=True)
 st.markdown("""
 <style>
 
@@ -443,7 +299,14 @@ def run_full_analysis():
 
         if errs:
             project_errors.extend([(os.path.basename(f), e) for e in errs])
-       
+        for r in raw_functions:
+            for err in r["errors"]:
+                if "Missing Docstring" in err:
+                    continue
+                project_errors.append(
+                    (r["file_name"], f"{r['function_name']}: {err}")
+                )
+            
 
     st.session_state.master_data = master_data
     
@@ -607,7 +470,7 @@ with right:
                             filtered_df["Docstring"] == "❌ Missing"
                         ]
 
-                    st.dataframe(filtered_df, use_container_width=True)
+                    st.dataframe(filtered_df.drop(columns=["Violations"]), use_container_width=True)
 
             # ---------------- SEARCH ----------------
             elif view == "search":
@@ -628,7 +491,7 @@ with right:
 
                         st.write("Results Found:", len(results))
 
-                        st.dataframe(results, use_container_width=True)
+                        st.dataframe(results.drop(columns=["Violations"]), use_container_width=True)
             # ---------------- EXPORT ----------------
             elif view == "export":
 
@@ -791,58 +654,6 @@ with right:
                                 """,
                                 unsafe_allow_html=True
                             )
-            # # ---------------- TESTS ----------------
-            # elif view == "tests":
-
-            #     st.subheader("🧪 Code Testing")
-
-            #     if df.empty:
-            #         st.warning("Run analysis first.")
-            #     else:
-
-            #         if st.button("Run Quick Test", use_container_width=True):
-
-            #             total_functions = len(df)
-            #             avg_complexity = df["Complexity"].mean()
-            #             violations = df["Violations"].sum()
-
-            #             st.success("Tests Completed Successfully")
-
-            #             col1, col2, col3 = st.columns(3)
-
-            #             col1.metric("Functions", total_functions)
-            #             col2.metric("Avg Complexity", round(avg_complexity, 2))
-            #             col3.metric("Violations", violations)
-
-            # # ---------------- EXPORT ----------------
-            # elif view == "export":
-
-            #     st.subheader("📦 Export Analysis")
-
-            #     if df.empty:
-            #         st.warning("Run analysis first.")
-            #     else:
-
-            #         csv = df.to_csv(index=False)
-
-            #         st.download_button(
-            #             "Download CSV",
-            #             data=csv,
-            #             file_name="analysis_report.csv",
-            #             mime="text/csv",
-            #             use_container_width=True
-            #         )
-
-            #         json_data = df.to_json(orient="records", indent=2)
-
-            #         st.download_button(
-            #             "Download JSON",
-            #             data=json_data,
-            #             file_name="analysis_report.json",
-            #             mime="application/json",
-            #             use_container_width=True
-            #         )
-
             # ---------------- HELP ----------------
             elif view == "help":
 
@@ -899,20 +710,22 @@ with right:
 
         # ---------------- FUNCTION ANALYSIS ----------------
         elif action == "📊 Function Analysis":
-
+            df_display = df.drop(columns=["Violations"])
             tab1, tab2 = st.tabs(["📋 Table View", "🧾 JSON View"])
 
             with tab1:
                 st.dataframe(
-                    df.style.applymap(color_docstring, subset=['Docstring']),
+                    df_display.style.applymap(color_docstring, subset=['Docstring']),
                     use_container_width=True
                 )
+                
 
             with tab2:
-                st.json(df.to_dict(orient="records"))
+                
+                st.json(df_display.to_dict(orient="records"))
                 st.download_button(
                     "⬇ Download JSON",
-                    data=df.to_json(orient="records", indent=2),
+                    data=df_display.to_json(orient="records", indent=2),
                     file_name="function_analysis.json",
                     mime="application/json",
                     use_container_width=True
@@ -948,17 +761,7 @@ with right:
             if "doc_style" not in st.session_state:
                 st.session_state.doc_style = "Google"
 
-            # with col1:
-            #     if st.button("📘 Google Style", use_container_width=True):
-            #         st.session_state.doc_style = "Google"
 
-            # with col2:
-            #     if st.button("📗 NumPy Style", use_container_width=True):
-            #         st.session_state.doc_style = "NumPy"
-
-            # with col3:
-            #     if st.button("📙 reST Style", use_container_width=True):
-            #         st.session_state.doc_style = "reST"
             with col1:
                 if st.button("📘 Google Style", use_container_width=True):
                     st.session_state.doc_style = "Google"
@@ -1118,26 +921,6 @@ with right:
                             run_full_analysis()
                             st.rerun()
 
-                    # with btn2:
-                    #     if st.button("🚀 Update All Functions", use_container_width=True):
-                    #         # Batch logic using current_style
-                    #         # df_file = df[df["File"] == selected_file]
-                    #         cache_key = f"{selected_file}_{func_name}_{current_style}"
-                    #         d_doc = st.session_state.doc_cache.get(cache_key) or generate_docstring(c_code, current_style)
-                    #         for func_name in df_file["Function"].tolist():
-                    #             with open(file_path, "r", encoding="utf-8") as f:
-                    #                 src = f.read()
-                    #             t = ast.parse(src)
-                    #             n = get_function_node(t, func_name)
-                    #             if n:
-                    #                 f_code = ast.get_source_segment(src, n) or ""
-                    #                 c_code = remove_existing_docstring(f_code)
-                    #                 d_doc = generate_docstring(c_code, current_style)
-                    #                 u_func = insert_docstring(c_code, d_doc)
-                    #                 update_function_in_file(file_path, func_name, u_func)
-                    #         run_full_analysis()
-                    #         st.balloons()
-                    #         st.rerun()
                     with btn2:
                         if st.button("🚀 Update All Functions", use_container_width=True):
 
@@ -1202,7 +985,7 @@ with right:
 
                             original = st.session_state.file_contents[f_path]
                             _, fixed = fix_source_code(original, os.path.basename(f_path))
-
+                            fixed = fix_docstrings(fixed)
                             with open(f_path, "w", encoding="utf-8") as file:
                                 file.write(fixed)
 

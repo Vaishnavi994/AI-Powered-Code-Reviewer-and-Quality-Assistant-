@@ -2,22 +2,28 @@
   {
     "File":"sample_a.py",
     "Function":"calculate_average",
+    "Start Line":1,
+    "End Line":8,
     "Complexity":3,
-    "Violations":0,
-    "Docstring":"\u2705 Present"
+    "Violations":1,
+    "Docstring":"\u274c Missing"
   },
   {
     "File":"sample_a.py",
     "Function":"add",
+    "Start Line":10,
+    "End Line":26,
     "Complexity":1,
-    "Violations":0,
+    "Violations":1,
     "Docstring":"\u2705 Present"
   },
   {
     "File":"sample_a.py",
     "Function":"process",
+    "Start Line":30,
+    "End Line":47,
     "Complexity":3,
-    "Violations":0,
+    "Violations":1,
     "Docstring":"\u2705 Present"
   }
 ]
