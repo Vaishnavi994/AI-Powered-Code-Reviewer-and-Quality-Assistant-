@@ -12,18 +12,18 @@
     "File":"sample_a.py",
     "Function":"add",
     "Start Line":10,
-    "End Line":26,
+    "End Line":20,
     "Complexity":1,
-    "Violations":1,
+    "Violations":0,
     "Docstring":"\u2705 Present"
   },
   {
     "File":"sample_a.py",
     "Function":"process",
-    "Start Line":30,
-    "End Line":47,
+    "Start Line":24,
+    "End Line":35,
     "Complexity":3,
-    "Violations":1,
+    "Violations":0,
     "Docstring":"\u2705 Present"
   }
 ]
