@@ -1,4 +1,4 @@
-
+AI-powered
 # 🚀 AI-Powered Code Reviewer and Quality Assistant
 
 ## 📖 Overview
